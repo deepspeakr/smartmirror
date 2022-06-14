@@ -1,0 +1,1 @@
+Smart mirror project intended for use with Raspberry Pi 4
