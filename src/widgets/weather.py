@@ -1,31 +1,105 @@
 import traceback
-from src.config.config import weather_api
 import requests
 import json
-import time
+from tkinter import LEFT, TOP, Frame, Label, N, W
+from PIL import Image, ImageTk
+from src.config.config import weather_api, ipstack_api
 
 
-def get_weather():
-    try:
+class Weather(Frame):
+    def __init__(self, parent):
+        Frame.__init__(self, parent, background="BLACK")
+        self.degreeFrm = Frame(self, bg="black")
+        self.degreeFrm.pack(side=TOP, anchor=W)
+        self.iconLbl = Label(self.degreeFrm, bg="black")
+        self.iconLbl.pack(side=LEFT, anchor=N)
+        self.icon = ''
+        self.city = ""
+        self.label_city = Label(self, font="dreams 35", bg="BLACK", fg="WHITE")
+        self.label_city.pack(side=TOP, anchor="w")
+        self.temperature = ""
+        self.label_temperature = Label(self, font="dreams 30", bg="BLACK", fg="WHITE")
+        self.label_temperature.pack(side=TOP, anchor="w")
 
+        self.humidity = ""
+        self.label_humidity = Label(self, font="dreams 25", bg="BLACK", fg="WHITE")
+        self.label_humidity.pack(side=TOP, anchor="w")
+
+        self.no_weather_data1 = "Cannot get weather data"
+        self.label_no_weather_data = Label(self, font="dreams 10", bg="BLACK", fg="WHITE")
+        self.label_no_weather_data.pack(side=TOP, anchor="w")
+
+        self.update_weather()
+
+    def get_ip(self):
+        try:
+            ip_url = "http://jsonip.com/"
+            req = requests.get(ip_url)
+            ip_json = json.loads(req.text)
+            return ip_json['ip']
+        except Exception as e:
+            traceback.print_exc()
+            return "Error: %s. Cannot get ip." % e
+
+    def get_location(self):
+        try:
+            url_location = "http://api.ipstack.com/%s?access_key=%s" % (self.get_ip(), ipstack_api)
+            req = requests.get(url_location)
+            location_json = json.loads(req.text)
+            print(location_json)
+            return location_json['latitude'], location_json['longitude']
+        except Exception as e:
+            traceback.print_exc()
+            return "Error: %s. Cannot get location." % e
+
+    def update_weather(self):
         api_key = weather_api
-        appid = 3099434  # Gdańsk
-        url = "http://api.openweathermap.org/data/2.5/weather?id=%s&&units=metric&appid=%s" % (appid, api_key)
-        response = requests.get(url)
-        conditions_data = json.loads(response.text)
-        print(conditions_data)
 
-        city_name = conditions_data[u'name']
-        temp_cur = conditions_data[u'main'][u'temp']
-        icon = str(conditions_data[u'weather'][0][u'icon'])
-        icon = icon[0:2]
-        humidity = conditions_data[u'main'][u'humidity']
-        wind = str(conditions_data[u'wind'][u'speed'])
-        wind_dir = str(conditions_data[u'wind'][u'deg'])
-        epoch = int(conditions_data[u'dt'])
-        utime = time.strftime('%H:%M', time.localtime(epoch))
-        print("aktualna temperatura dla miasta", city_name, "to:", temp_cur)
+        latitude, longitude = self.get_location()
 
-    except Exception as e:
-        traceback.print_exc()
-        return "Error"
+        url_weather = "https://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s&units=metric" % (
+            latitude, longitude, api_key)
+        weather_get = requests.get(url_weather)
+        if weather_get.status_code == 200:
+            weather = weather_get.json()
+            print(weather)
+            temperature2 = str(weather[u'main'][u'temp'])
+            humidity2 = str(weather[u'main'][u'humidity'])
+            city2 = str(weather[u'name'])
+
+            if self.temperature != temperature2:
+                self.temperature = temperature2
+                self.label_temperature.config(text="Temperature: " + temperature2 + " °C")
+            if self.humidity != humidity2:
+                self.humidity = humidity2
+                self.label_humidity.config(text="Humidity: " + humidity2 + " %")
+            if self.city != city2:
+                self.city = city2
+                self.label_city.config(text=city2)
+
+            icon_id = weather[u'weather'][0]['icon']
+            icon2 = None
+            if icon_id != " ":
+                icon2 = icon_id
+            icon_dir = "icons/" + icon_id + "@2x.png"
+            print(icon_dir)
+            if icon2 is not None:
+                if self.icon != icon2:
+                    self.icon = icon2
+                    image = Image.open(icon_dir)
+                    image = image.resize((100, 100), Image.ANTIALIAS)
+                    photo = ImageTk.PhotoImage(image)
+
+                    self.iconLbl.config(image=photo)
+                    self.iconLbl.image = photo
+            else:
+                # remove image
+                self.iconLbl.config(image='')
+
+        else:
+            self.label_no_weather_data.config(text=self.no_weather_data1)
+            self.label_temperature.config(text="")
+            self.label_humidity.config(text="")
+            self.label_city.config(text="")
+
+        self.after(600000, self.update_weather)
