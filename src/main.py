@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 import sys
 import tkinter as tk
-from tkinter import LEFT, TOP, Frame, Label, N, W, BOTH, BOTTOM, RIGHT, S, E
 
-from src.widgets.calendar import Calendar
-from src.widgets.clock import Clock
-from src.widgets.news import News
-from src.widgets.weather import Weather
+from widgets.calendar import Calendar
+from widgets.clock import Clock
+from widgets.news import News
+from widgets.weather import Weather
 from widgets.TestWidget import TestWidget
 
 
@@ -21,40 +20,33 @@ class Final:
         self.root.configure(bg="BLACK")
         self.state = False
 
-        self.top = Frame(self.root, bg="BLACK")
-        self.top.pack(side=TOP, fill=BOTH)
-        self.bottom = Frame(self.root, bg="BLACK")
-        self.bottom.pack(side=BOTTOM, fill=BOTH)
+        self.top = tk.Frame(self.root, bg="BLACK")
+        self.top.pack(side=tk.TOP, fill=tk.BOTH)
+        self.bottom = tk.Frame(self.root, bg="BLACK")
+        self.bottom.pack(side=tk.BOTTOM, fill=tk.BOTH)
 
         self.time = Clock(self.top)
-        self.time.pack(side=RIGHT, anchor=N, pady=60)
+        self.time.pack(side=tk.RIGHT, anchor=tk.N, pady=60)
 
         self.calendar = Calendar(self.bottom)
-        self.calendar.pack(side = RIGHT, anchor=N, padx=0, pady=60)
+        self.calendar.pack(side = tk.RIGHT, anchor=tk.N, padx=0, pady=60)
 
         self.weather_show = Weather(self.top)
-        self.weather_show.pack(side=LEFT, anchor=N, padx=50, pady=60)
+        self.weather_show.pack(side=tk.LEFT, anchor=tk.N, padx=50, pady=60)
 
-        self.greeting = Label(self.root, text="smartmirror by tomsoch & rysje", font="Arial 10", bg="BLACK", fg="WHITE")
-        self.greeting.pack(side=BOTTOM, pady=10)
+        self.greeting = tk.Label(self.root, text="smartmirror by tomsoch & rysje", font="Arial 10", bg="BLACK", fg="WHITE")
+        self.greeting.pack(side=tk.BOTTOM, pady=10)
         self.news = News(self.bottom)
-        self.news.pack(side=LEFT, anchor=S, padx=100, pady=60)
-
-
+        self.news.pack(side=tk.LEFT, anchor=tk.S, padx=100, pady=60)
 
         self.root.bind("<Return>", self.toggle_fullscreen)
-        self.root.bind("<Escape>", self.end_fullscreen)
+        self.root.bind("<Escape>", close_application)
         self.root.attributes("-fullscreen", 1)
         self.root.mainloop()
 
     def toggle_fullscreen(self, event=None):
         self.state = not self.state
         self.root.attributes("-fullscreen", self.state)
-        return "break"
-
-    def end_fullscreen(self, event=None):
-        self.state = False
-        self.root.attributes("-fullscreen", False)
         return "break"
 
 
