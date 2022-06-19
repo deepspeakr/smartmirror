@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 import sys
 import tkinter as tk
-from tkinter import LEFT, TOP, Frame, Label, N, W, BOTH, BOTTOM, RIGHT
+from tkinter import LEFT, TOP, Frame, Label, N, W, BOTH, BOTTOM, RIGHT, S, E
+
+from src.widgets.calendar import Calendar
 from src.widgets.clock import Clock
+from src.widgets.news import News
 from src.widgets.weather import Weather
 from widgets.TestWidget import TestWidget
 
@@ -26,11 +29,18 @@ class Final:
         self.time = Clock(self.top)
         self.time.pack(side=RIGHT, anchor=N, pady=60)
 
+        self.calendar = Calendar(self.bottom)
+        self.calendar.pack(side = RIGHT, anchor=N, padx=0, pady=60)
+
         self.weather_show = Weather(self.top)
         self.weather_show.pack(side=LEFT, anchor=N, padx=50, pady=60)
 
         self.greeting = Label(self.root, text="smartmirror by tomsoch & rysje", font="Arial 10", bg="BLACK", fg="WHITE")
         self.greeting.pack(side=BOTTOM, pady=10)
+        self.news = News(self.bottom)
+        self.news.pack(side=LEFT, anchor=S, padx=100, pady=60)
+
+
 
         self.root.bind("<Return>", self.toggle_fullscreen)
         self.root.bind("<Escape>", self.end_fullscreen)
