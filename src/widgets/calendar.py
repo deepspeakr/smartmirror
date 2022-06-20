@@ -1,16 +1,21 @@
 from tkinter import *
-import threading
 
 from src.widgets.news import *
 
 
 class Calendar(Frame):
     def __init__(self, parent, *args, **kwargs):
-        Frame.__init__(self, parent, bg='black')
-        self.title = 'Calendar Events'
-        self.calendarLbl = Label(self, text=self.title, font=('Helvetica', medium_text_size), fg="white", bg="black")
+        Frame.__init__(self, parent, bg="black", *args, **kwargs)
+        self.title = "Calendar Events"
+        self.calendarLbl = Label(
+            self,
+            text=self.title,
+            font=("Helvetica", config.MEDIUM_TEXT_SIZE),
+            fg="white",
+            bg="black"
+        )
         self.calendarLbl.pack(side=TOP, anchor=E)
-        self.calendarEventContainer = Frame(self, bg='black')
+        self.calendarEventContainer = Frame(self, bg="black")
         self.calendarEventContainer.pack(side=TOP, anchor=E)
         self.get_events()
 
@@ -25,8 +30,13 @@ class Calendar(Frame):
 
 class CalendarEvent(Frame):
     def __init__(self, parent, event_name="Urodziny Ani"):
-        Frame.__init__(self, parent, bg='black')
+        Frame.__init__(self, parent, bg="black")
         self.eventName = event_name
-        self.eventNameLbl = Label(self, text=self.eventName, font=('Helvetica', small_text_size), fg="white",
-                                  bg="black")
+        self.eventNameLbl = Label(
+            self,
+            text=self.eventName,
+            font=("Helvetica", config.SMALL_TEXT_SIZE),
+            fg="white",
+            bg="black"
+        )
         self.eventNameLbl.pack(side=TOP, anchor=E)

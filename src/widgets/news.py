@@ -1,46 +1,50 @@
-from tkinter import *
-import traceback
 import feedparser
+import tkinter as tk
+import traceback
+
 from PIL import Image, ImageTk
 
 import src.config.config as config
 
-news_country_code = 'pl'
-medium_text_size = 28
-small_text_size = 18
 
-
-class NewsHeadline(Frame):
+class NewsHeadline(tk.Frame):
     def __init__(self, parent, event_name=""):
-        Frame.__init__(self, parent, bg='black')
+        tk.Frame.__init__(self, parent, bg='black')
 
         image = Image.open("icons/Newspaper.png")
         image = image.resize((25, 25), Image.ANTIALIAS)
-        image = image.convert('RGB')
+        image = image.convert("RGB")
         photo = ImageTk.PhotoImage(image)
 
-        self.iconLbl = Label(self, bg='black', image=photo)
+        self.iconLbl = tk.Label(self, bg="black", image=photo)
         self.iconLbl.image = photo
-        self.iconLbl.pack(side=LEFT, anchor=N)
+        self.iconLbl.pack(side=tk.LEFT, anchor=tk.N)
 
         self.eventName = event_name
-        self.eventNameLbl = Label(self, text=self.eventName,
-                                  font=('Helvetica', small_text_size),
-                                  fg="white",
-                                  bg="black"
-                                  )
-        self.eventNameLbl.pack(side=LEFT, anchor=N)
+        self.eventNameLbl = tk.Label(
+            self, text=self.eventName,
+            font=("Helvetica", config.SMALL_TEXT_SIZE),
+            fg="white",
+            bg="black"
+        )
+        self.eventNameLbl.pack(side=tk.LEFT, anchor=tk.N)
 
 
-class News(Frame):
+class News(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
-        Frame.__init__(self, parent, *args, **kwargs)
-        self.config(bg='black')
-        self.title = 'News'  # 'News' is more internationally generic
-        self.newsLbl = Label(self, text=self.title, font=('Helvetica', medium_text_size), fg="white", bg="black")
-        self.newsLbl.pack(side=TOP, anchor=W)
-        self.headlinesContainer = Frame(self, bg="black")
-        self.headlinesContainer.pack(side=TOP)
+        tk.Frame.__init__(self, parent, *args, **kwargs)
+        self.config(bg="black")
+        self.title = "News"
+        self.newsLbl = tk.Label(
+            self,
+            text=self.title,
+            font=("Helvetica", config.MEDIUM_TEXT_SIZE),
+            fg="white",
+            bg="black"
+        )
+        self.newsLbl.pack(side=tk.TOP, anchor=tk.W)
+        self.headlinesContainer = tk.Frame(self, bg="black")
+        self.headlinesContainer.pack(side=tk.TOP)
         self.get_headlines()
 
     def get_headlines(self):
@@ -55,7 +59,7 @@ class News(Frame):
 
             for post in feed.entries[0:5]:
                 headline = NewsHeadline(self.headlinesContainer, post.title)
-                headline.pack(side=TOP, anchor=W)
+                headline.pack(side=tk.TOP, anchor=tk.W)
         except Exception as e:
             traceback.print_exc()
             print("Error: %s. Cannot get news." % e)

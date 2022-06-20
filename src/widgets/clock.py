@@ -21,7 +21,7 @@ class Clock(Frame):
         self.update_time()
 
     def update_time(self):
-        time2 = strftime('%H:%M:%S')
+        time2 = strftime("%H:%M:%S")
         day2 = strftime("%B %d, %Y")
         day_of_the_week2 = strftime("%A")
         if self.time1 != time2:

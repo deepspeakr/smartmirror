@@ -68,5 +68,6 @@ class MainWindow:
 if __name__ == "__main__":
     # w = MainWindow()
     # w.tk.mainloop()
+    print("INFO: Starting smartmirror. Press <ESC> to close.")
     start = Final()
     start.root.mainloop()
