@@ -6,7 +6,6 @@ from widgets.calendar import Calendar
 from widgets.clock import Clock
 from widgets.news import News
 from widgets.weather import Weather
-from widgets.TestWidget import TestWidget
 
 
 def close_application(event=None):
