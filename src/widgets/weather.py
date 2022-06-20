@@ -3,7 +3,8 @@ import requests
 import json
 from tkinter import LEFT, TOP, Frame, Label, N, W
 from PIL import Image, ImageTk
-from src.config.config import weather_api, ipstack_api
+
+import src.config.config as config
 
 
 class Weather(Frame):
@@ -43,17 +44,22 @@ class Weather(Frame):
 
     def get_location(self):
         try:
-            url_location = "http://api.ipstack.com/%s?access_key=%s" % (self.get_ip(), ipstack_api)
+            if config.IPSTACK_API is None:
+                raise ValueError("API key for ipstack is not set. Update corresponding value in config.py.")
+            url_location = "http://api.ipstack.com/%s?access_key=%s" % (self.get_ip(), config.IPSTACK_API)
             req = requests.get(url_location)
             location_json = json.loads(req.text)
-            print(location_json)
+            if config.DEBUG:
+                print(f"INFO: Using following location for weather widget: {location_json}")
             return location_json['latitude'], location_json['longitude']
         except Exception as e:
             traceback.print_exc()
             return "Error: %s. Cannot get location." % e
 
     def update_weather(self):
-        api_key = weather_api
+        if config.WEATHER_API is None:
+            raise ValueError("API key for openweather is not set. Update corresponding value in config.py.")
+        api_key = config.WEATHER_API
 
         latitude, longitude = self.get_location()
 
@@ -62,7 +68,8 @@ class Weather(Frame):
         weather_get = requests.get(url_weather)
         if weather_get.status_code == 200:
             weather = weather_get.json()
-            print(weather)
+            if config.DEBUG:
+                print(f"INFO: Weather JSON: {weather}")
             temperature2 = str(weather[u'main'][u'temp'])
             humidity2 = str(weather[u'main'][u'humidity'])
             city2 = str(weather[u'name'])
@@ -82,7 +89,8 @@ class Weather(Frame):
             if icon_id != " ":
                 icon2 = icon_id
             icon_dir = "icons/" + icon_id + "@2x.png"
-            print(icon_dir)
+            if config.DEBUG:
+                print(f"INFO: Using icon: {icon_dir}")
             if icon2 is not None:
                 if self.icon != icon2:
                     self.icon = icon2

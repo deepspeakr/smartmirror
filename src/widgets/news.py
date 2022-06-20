@@ -3,6 +3,8 @@ import traceback
 import feedparser
 from PIL import Image, ImageTk
 
+import src.config.config as config
+
 news_country_code = 'pl'
 medium_text_size = 28
 small_text_size = 18
@@ -22,8 +24,11 @@ class NewsHeadline(Frame):
         self.iconLbl.pack(side=LEFT, anchor=N)
 
         self.eventName = event_name
-        self.eventNameLbl = Label(self, text=self.eventName, font=('Helvetica', small_text_size), fg="white",
-                                  bg="black")
+        self.eventNameLbl = Label(self, text=self.eventName,
+                                  font=('Helvetica', small_text_size),
+                                  fg="white",
+                                  bg="black"
+                                  )
         self.eventNameLbl.pack(side=LEFT, anchor=N)
 
 
@@ -43,14 +48,10 @@ class News(Frame):
             # remove all children
             for widget in self.headlinesContainer.winfo_children():
                 widget.destroy()
-            if news_country_code is None:
-                headlines_url = "https://news.google.com/rss?topic=h&hl=pl&gl=PL&ceid=PL:pl"
-                print(headlines_url)
-            else:
-                headlines_url = "https://news.google.com/news?ned=%s&output=rss" % news_country_code
-                print(headlines_url)
+            if config.DEBUG:
+                print(f"INFO: Using following news url: {config.NEWS_URL}")
 
-            feed = feedparser.parse(headlines_url)
+            feed = feedparser.parse(config.NEWS_URL)
 
             for post in feed.entries[0:5]:
                 headline = NewsHeadline(self.headlinesContainer, post.title)
