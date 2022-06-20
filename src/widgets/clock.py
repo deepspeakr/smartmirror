@@ -1,21 +1,23 @@
 from tkinter import *
 from time import *
 
+import src.config.config as config
+
 
 class Clock(Frame):
 
     def __init__(self, master):
         Frame.__init__(self, master, background="BLACK")
         self.time1 = ""
-        self.label_time = Label(self, font="dreams 40", bg="BLACK", fg="WHITE")
+        self.label_time = Label(self, font=("dreams", config.LARGE_TEXT_SIZE), bg="BLACK", fg="WHITE")
         self.label_time.pack(side=TOP, anchor="e")
 
         self.day1 = ""
-        self.label_day = Label(self, font="dreams 28", bg="BLACK", fg="WHITE")
+        self.label_day = Label(self, font=("dreams", config.MEDIUM_TEXT_SIZE), bg="BLACK", fg="WHITE")
         self.label_day.pack(side=TOP, anchor="e")
 
         self.day_of_the_week1 = ""
-        self.label_day_of_the_week = Label(self, font="dreams 28", bg="BLACK", fg="WHITE")
+        self.label_day_of_the_week = Label(self, font=("dreams", config.MEDIUM_TEXT_SIZE), bg="BLACK", fg="WHITE")
         self.label_day_of_the_week.pack(side=TOP, anchor="e")
 
         self.update_time()
