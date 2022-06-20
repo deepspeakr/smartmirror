@@ -26,18 +26,18 @@ class MainWindow:
         self.bottom.pack(side=tk.BOTTOM, fill=tk.BOTH)
 
         self.time = Clock(self.top)
-        self.time.pack(side=tk.RIGHT, anchor=tk.N, pady=60)
+        self.time.pack(side=tk.RIGHT, anchor=tk.N, padx=40, pady=50)
 
         self.calendar = Calendar(self.bottom)
-        self.calendar.pack(side = tk.RIGHT, anchor=tk.N, padx=0, pady=60)
+        self.calendar.pack(side = tk.RIGHT, anchor=tk.N, padx=40, pady=50)
 
         self.weather_show = Weather(self.top)
-        self.weather_show.pack(side=tk.LEFT, anchor=tk.N, padx=50, pady=60)
+        self.weather_show.pack(side=tk.LEFT, anchor=tk.N, padx=40, pady=50)
 
-        self.greeting = tk.Label(self.root, text="smartmirror by tomsoch & rysje", font="Arial 10", bg="BLACK", fg="WHITE")
+        self.greeting = tk.Label(self.root, text="smartmirror by tomsoch & rysje", font="Arial 8", bg="BLACK", fg="WHITE")
         self.greeting.pack(side=tk.BOTTOM, pady=10)
         self.news = News(self.bottom)
-        self.news.pack(side=tk.LEFT, anchor=tk.S, padx=100, pady=60)
+        self.news.pack(side=tk.LEFT, anchor=tk.S, padx=40, pady=50)
 
         self.root.bind("<Return>", self.toggle_fullscreen)
         self.root.bind("<Escape>", close_application)
